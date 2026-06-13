@@ -1,4 +1,8 @@
 from backend.knowledge import retrieve_snippets
+from backend.cag import apply_context
+from backend.context_store import ContextStore
+
+_store = ContextStore()
 
 
 def answer_question(user_id, question):
@@ -13,11 +17,21 @@ def answer_question(user_id, question):
         }
 
     source_text = " ".join(item["content"] for item in snippets)
-    answer = f"Segun la base de conocimiento del curso: {source_text}"
+    base_answer = f"Segun la base de conocimiento del curso: {source_text}"
+
+   # Recuperar contexto previo del usuario
+    context_raw = _store.list_for_user(user_id)
+    context_items = {item["key"]: item["value"] for item in context_raw}
+
+    # Enriquecer respuesta con CAG
+    final_answer = apply_context(user_id, question, base_answer, context_items)
+
+    # Guardar esta pregunta como nuevo contexto
+    _store.save(user_id, "ultima_pregunta", question)
 
     return {
         "user_id": user_id,
-        "answer": answer,
+        "answer": final_answer,
         "sources": [item["id"] for item in snippets],
-        "context_used": [],
+        "context_used": list(context_items.keys()),
     }
