@@ -26,9 +26,7 @@ def answer_question(user_id, question):
     # Enriquecer respuesta con CAG
     final_answer = apply_context(user_id, question, base_answer, context_items)
 
-    # Guardar esta pregunta como nuevo contexto
-    _store.save(user_id, "ultima_pregunta", question)
-
+  
     return {
         "user_id": user_id,
         "answer": final_answer,

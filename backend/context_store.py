@@ -13,15 +13,15 @@ class ContextStore:
 
     def _ensure_file(self):
         if not self.path.exists():
-            self.path.write_text("{}", encoding="utf-8")
+            self.path.write_text("{}", encoding="utf-8-sig")
 
     def _load(self):
-        return json.loads(self.path.read_text(encoding="utf-8"))
+        return json.loads(self.path.read_text(encoding="utf-8-sig"))
 
     def _save(self, data):
         self.path.write_text(
             json.dumps(data, ensure_ascii=False, indent=2),
-            encoding="utf-8"
+            encoding="utf-8-sig"
         )
 
     def save(self, user_id, key, value):
@@ -38,4 +38,8 @@ class ContextStore:
      return [{"key": k, "value": v} for k, v in raw.items()]
 
     def get(self, user_id, key, default=None):
-        return self.list_for_user(user_id).get(key, default)
+     items = self.list_for_user(user_id)
+     for item in items:
+        if item["key"] == key:
+            return item["value"]
+     return default

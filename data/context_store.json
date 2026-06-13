@@ -1,10 +1,6 @@
-{
-  "base-user": {
-    "ultima_pregunta": "Que es RAG en el curso?"
-  },
+﻿{
   "luis": {
-    "audience": "explicar como principiante",
-    "ultima_pregunta": "Que es CAG?"
+    "audience": "explicar como principiante"
   },
   "ana": {
     "project": "usa arquitectura monolitica moderna",
